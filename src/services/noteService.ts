@@ -1,8 +1,6 @@
 import axios from "axios";
 import { Note } from "../types/note";
-import { FetchNextPageOptions } from "@tanstack/react-query";
 
-const API_KEY = import.meta.env.VITE_NOTEHUB_TOKEN;
 
 const api = axios.create({
   baseURL: "https://notehub-public.goit.study/api",
@@ -11,7 +9,7 @@ const api = axios.create({
   },
 });
 
-interface FetchNotesResponse {
+export interface FetchNotesResponse {
   notes: Note[];
   totalPages: number;
 }
@@ -22,21 +20,71 @@ export interface FetchNotesParams {
   search?: string;
 }
 
+export interface CreateNoteRequest {
+  title: string;
+  content: string;
+  tag?: string;
+}
+
 export async function fetchNotes(
-  params: FetchNotesParams,
+  params: FetchNotesParams
 ): Promise<FetchNotesResponse> {
-  const response = await api.get("/notes", {
-    params,
-  });
+  const response = await api.get<FetchNotesResponse>("/notes", { params });
   return response.data;
 }
 
-export async function createNote(newTask: Note) {
-  const response = await api.post<Note>("/notes", newTask);
+export async function createNote(
+  data: CreateNoteRequest
+): Promise<Note> {
+  const response = await api.post<Note>("/notes", data);
   return response.data;
 }
 
-export async function deleteNote(id: string) {
+export async function deleteNote(id: string): Promise<Note> {
   const response = await api.delete<Note>(`/notes/${id}`);
   return response.data;
 }
+
+
+// import axios from "axios";
+// import { Note } from "../types/note";
+// import { FetchNextPageOptions } from "@tanstack/react-query";
+
+// const API_KEY = import.meta.env.VITE_NOTEHUB_TOKEN;
+
+// const api = axios.create({
+//   baseURL: "https://notehub-public.goit.study/api",
+//   headers: {
+//     Authorization: `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`,
+//   },
+// });
+
+// interface FetchNotesResponse {
+//   notes: Note[];
+//   totalPages: number;
+// }
+
+// export interface FetchNotesParams {
+//   page: number;
+//   perPage: number;
+//   search?: string;
+// }
+
+// export async function fetchNotes(
+//   params: FetchNotesParams,
+// ): Promise<FetchNotesResponse> {
+//   const response = await api.get("/notes", {
+//     params,
+//   });
+//   return response.data;
+// }
+
+// export async function createNote(newTask: Note) {
+//   const response = await api.post<Note>("/notes", newTask);
+//   return response.data;
+// }
+
+// export async function deleteNote(id: string) {
+//   const response = await api.delete<Note>(`/notes/${id}`);
+//   return response.data;
+// }

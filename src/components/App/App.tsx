@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import NoteList from "../NoteList/NoteList";
 import { fetchNotes } from "../../services/noteService";
