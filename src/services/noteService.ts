@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Note } from "../types/note";
 
+
 interface ImportMetaEnv {
   readonly VITE_NOTEHUB_TOKEN: string;
 }
@@ -9,12 +10,14 @@ interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
 
+
 const api = axios.create({
   baseURL: "https://notehub-public.goit.study/api",
   headers: {
     Authorization: `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`,
   },
 });
+
 
 export interface FetchNotesResponse {
   notes: Note[];
@@ -27,11 +30,13 @@ export interface FetchNotesParams {
   search?: string;
 }
 
+
 export interface CreateNoteRequest {
   title: string;
   content: string;
-  tag?: string;
+  tag: string;
 }
+
 
 export async function fetchNotes(
   params: FetchNotesParams
@@ -51,7 +56,6 @@ export async function deleteNote(id: string): Promise<Note> {
   const response = await api.delete<Note>(`/notes/${id}`);
   return response.data;
 }
-
 
 
 // import axios from "axios";

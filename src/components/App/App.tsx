@@ -1,5 +1,4 @@
-
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import NoteList from "../NoteList/NoteList";
 import { fetchNotes } from "../../services/noteService";
 import css from "./App.module.css";
@@ -10,11 +9,12 @@ import SearchBox from "../SearchBox/SearchBox";
 import { useDebouncedCallback } from "use-debounce";
 import Loader from "../Loader/Loader";
 import toast, { Toaster } from "react-hot-toast";
+import NoteForm from "../NoteForm/NoteForm";
 
 export default function App() {
   const [page, setPage] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDebouncedSearch = useDebouncedCallback((value: string) => {
     setSearch(value);
@@ -27,8 +27,9 @@ export default function App() {
       fetchNotes({
         page,
         perPage: 12,
-        search: search,
+        search,
       }),
+    keepPreviousData: true,
   });
 
   useEffect(() => {
@@ -45,9 +46,7 @@ export default function App() {
       <header className={css.toolbar}>
         <SearchBox
           value={search}
-          onChange={(value) => {
-            handleDebouncedSearch(value);
-          }}
+          onChange={(value) => handleDebouncedSearch(value)}
         />
         {data && data.totalPages > 1 && (
           <Pagination
@@ -56,15 +55,22 @@ export default function App() {
             onPageSelect={setPage}
           />
         )}
-
         <button className={css.button} onClick={openModal}>
           Create note +
         </button>
       </header>
+
       {(isLoading || isFetching) && <Loader />}
       <Toaster />
+
       {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
-      {isModalOpen && <Modal onCloseModal={closeModal} />}
+
+      {isModalOpen && (
+        <Modal onCloseModal={closeModal}>
+          {/* NoteForm передається як children */}
+          <NoteForm onCloseModal={closeModal} />
+        </Modal>
+      )}
     </div>
   );
 }
