@@ -1,6 +1,13 @@
 import axios from "axios";
 import { Note } from "../types/note";
 
+interface ImportMetaEnv {
+  readonly VITE_NOTEHUB_TOKEN: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
 
 const api = axios.create({
   baseURL: "https://notehub-public.goit.study/api",
@@ -44,6 +51,7 @@ export async function deleteNote(id: string): Promise<Note> {
   const response = await api.delete<Note>(`/notes/${id}`);
   return response.data;
 }
+
 
 
 // import axios from "axios";
